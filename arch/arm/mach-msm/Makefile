@@ -457,7 +457,7 @@ obj-$(CONFIG_WALL_CLK_SYSFS) += wallclk_sysfs.o
 
 obj-y += display/
 obj-$(CONFIG_ARCH_DUMMY) += board-htc-8974.o htc_acoustic_alsa.o
-obj-$(CONFIG_ARCH_MSM8226) += htc_acoustic_alsa.o
+obj-$(CONFIG_ARCH_MSM8226) += htc_acoustic_alsa.o htc_lpm.o
 obj-$(CONFIG_MACH_BAGOSS) += board-bagoss-gpiomux.o
 
 obj-$(CONFIG_MACH_A5) += board-a5ul-gpiomux.o

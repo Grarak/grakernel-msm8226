@@ -83,6 +83,13 @@
 #include <linux/android_ediagpmem.h>
 #endif
 
+#if defined(CONFIG_LCD_KCAL)
+#include <linux/module.h>
+#include "../../../drivers/video/msm/mdss/mdss_fb.h"
+#include <mach/htc_lcd_kcal.h>
+extern int update_preset_lcdc_lut(void);
+#endif
+
 #define HTC_8226_PERSISTENT_RAM_PHYS 0x05B00000
 #ifdef CONFIG_HTC_BUILD_EDIAG
 #define HTC_8226_PERSISTENT_RAM_SIZE (SZ_1M - SZ_128K - SZ_64K)
@@ -407,6 +414,52 @@ static void msm8226_add_usb_devices(void)
 	platform_device_register(&android_usb_device);
 }
 
+#if defined(CONFIG_LCD_KCAL)
+extern int g_kcal_r;
+extern int g_kcal_g;
+extern int g_kcal_b;
+
+int kcal_set_values(int kcal_r, int kcal_g, int kcal_b)
+{
+	g_kcal_r = kcal_r;
+	g_kcal_g = kcal_g;
+	g_kcal_b = kcal_b;
+	return 0;
+}
+
+static int kcal_get_values(int *kcal_r, int *kcal_g, int *kcal_b)
+{
+	*kcal_r = g_kcal_r;
+	*kcal_g = g_kcal_g;
+	*kcal_b = g_kcal_b;
+	return 0;
+}
+
+static int kcal_refresh_values(void)
+{
+	return update_preset_lcdc_lut();
+}
+
+static struct kcal_platform_data kcal_pdata = {
+	.set_values = kcal_set_values,
+	.get_values = kcal_get_values,
+	.refresh_display = kcal_refresh_values
+};
+
+static struct platform_device kcal_platrom_device = {
+	.name = "kcal_ctrl",
+	.dev = {
+	.platform_data = &kcal_pdata,
+	}
+};
+
+void __init htc_add_lcd_kcal_devices(void)
+{
+	pr_info (" LCD_KCAL_DEBUG : %s \n", __func__);
+	platform_device_register(&kcal_platrom_device);
+};
+#endif
+
 #if defined(CONFIG_HTC_BATT_8960)
 static int critical_alarm_voltage_mv[] = {3000, 3200, 3400};
 
@@ -515,6 +568,9 @@ void __init htc_8226_add_drivers(void)
 	htc_8226_dsi_panel_power_register();
 #ifdef CONFIG_HTC_POWER_DEBUG
 	htc_8226_cpu_usage_register();
+#endif
+#if defined(CONFIG_LCD_KCAL)
+	htc_add_lcd_kcal_devices();
 #endif
 }
 

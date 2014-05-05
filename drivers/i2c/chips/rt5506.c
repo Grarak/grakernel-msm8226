@@ -37,12 +37,6 @@
 #include <mach/htc_acoustic_alsa.h>
 #include <mach/socinfo.h>
 
-#undef pr_info
-#undef pr_err
-#define pr_info(fmt, ...) pr_aud_info(fmt, ##__VA_ARGS__)
-#define pr_err(fmt, ...) pr_aud_err(fmt, ##__VA_ARGS__)
-
-
 #define DEBUG (1)
 #define AMP_ON_CMD_LEN 7
 #define RETRY_CNT 5

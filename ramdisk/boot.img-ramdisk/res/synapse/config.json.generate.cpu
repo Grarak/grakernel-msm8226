@@ -65,6 +65,15 @@ cat << CTAG
 		description:"Stock Qualcomm hotplug driver and frequency service. This should be disabled if current kernel has an alternative.",
 		action:"mpdecision"
 	}},
+	{ STitleBar:{
+                title:"IntelliPlug"
+        }},
+	{ SCheckBox:{
+		description:"IntelliPlug is a total replacement for Qualcomm's proprietary MPDecsion. It hotplugs/unplugs CPU cores based on load demand of the system.",
+                label:"Enable IntelliPlug",
+                default:`cat /sys/module/intelli_plug/parameters/intelli_plug_active`,
+                action:"generic /sys/module/intelli_plug/parameters/intelli_plug_active"
+        }},
     ]
 }
 CTAG

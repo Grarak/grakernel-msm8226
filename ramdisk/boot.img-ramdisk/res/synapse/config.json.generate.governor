@@ -1,0 +1,72 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:"Governor",
+    elements:[
+        { SOptionList:{
+		description:"The CPU governor determines how the CPU behaves in response to changes in workload. Changing the governor will impact how the CPU scales through the frequency steps available to you CPU.",
+		default:`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`,
+                action:"cpugeneric scaling_governor",
+                values:[
+`
+                        for GOVERNOR in \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors\` ; do
+                                echo "\"$GOVERNOR\","
+                        done
+`
+                ],
+		notify:[
+			{
+				on:APPLY,
+				do:[ REFRESH, CANCEL ],
+				to:"/sys/devices/system/cpu/cpufreq"
+			},
+			{
+				on:REFRESH,
+				do:REFRESH,
+				to:"/sys/devices/system/cpu/cpufreq"
+			}
+		]
+        }},
+	{ STitleBar:{
+		title:"Governor tunables"
+        }},
+	{ SDescription:{
+		description:"The various configuration items which are governor-dependent."
+	}},
+	{ STreeDescriptor:{
+		path:"/sys/devices/system/cpu/cpufreq",
+		generic: {
+			directory: {
+				STreeDescriptor:{
+					generic: {
+						directory: {},
+						element: {
+							SGeneric: { title:"@NAME" }
+						}
+					},
+					matched: {
+						elements: [
+							{ "sampling_rate" : {
+								SSeekBar: {
+									title:"Sampling rate",
+									description:"The sampling rate controls the frequency in which the governor polls for frequency changes.",
+									min:10000, max:100000, step:10000, unit:"ms"
+								}
+							}}
+						]
+					},
+					exclude: [
+						"cpu_utilization",
+						"sampling_rate_min",
+						"up_threshold_h",
+						"up_threshold_l"
+					]
+				}
+			}
+		},
+		exclude: [ "" ]
+	}},
+    ]
+}
+CTAG

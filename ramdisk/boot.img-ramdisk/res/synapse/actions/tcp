@@ -1,0 +1,10 @@
+if [ -f $1 ];then
+	if [[ ! -z $2 ]]; then
+		sysctl -w net.ipv4.tcp_congestion_control=$2
+	fi
+	TCPNUM=0
+	for TCP in `cat $1` ; do
+		[ "$TCPNUM" == 0 ] && echo $TCP
+		TCPNUM=$(($TCPNUM+1))
+	done 
+fi

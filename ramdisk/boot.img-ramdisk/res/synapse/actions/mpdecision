@@ -1,0 +1,15 @@
+if [[ ! -z $1 ]]; then
+	if [ "$1" == "1" ]; then
+		start mpdecision
+	elif [ "$1" == "0" ]; then
+		stop mpdecision
+		for i in 0 1 2 3; do echo 1 > /sys/devices/system/cpu/cpu${i}/online; done
+	fi
+fi
+
+ENABLED=0
+for i in `ps | grep mpdecision`; do
+	[ $i == "/system/bin/mpdecision" ] && ENABLED=1
+done
+
+echo $ENABLED

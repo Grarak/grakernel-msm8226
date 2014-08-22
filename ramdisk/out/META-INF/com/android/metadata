@@ -1,0 +1,3 @@
+post-build=samsung/meliusltexx/meliuslte:4.2.2/JDQ39/I9205XXUAMEA:user/release-keys
+post-timestamp=1392947696
+pre-device=meliuslte

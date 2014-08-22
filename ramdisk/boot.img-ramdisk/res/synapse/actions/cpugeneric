@@ -1,0 +1,24 @@
+if [[ ! -z $2 ]]; then
+	DISABLEDMPDE=0
+
+	ENABLED=0
+	for i in `ps | grep mpdecision`; do
+		[ $i == "/system/bin/mpdecision" ] && ENABLED=1
+	done
+
+	if [ $ENABLED == "1" ]; then
+		stop mpdecision
+		for i in 0 1 2 3; do echo 1 > /sys/devices/system/cpu/cpu${i}/online; done
+		DISABLEDMPDE=1
+	fi
+
+	for i in 0 1 2 3; do
+		[ -f /sys/devices/system/cpu/cpu${i}/cpufreq/${1} ] && echo $2 > /sys/devices/system/cpu/cpu${i}/cpufreq/${1}
+	done
+
+	if [ $DISABLEDMPDE == "1" ]; then
+		start mpdecision
+	fi
+fi
+
+echo `cat /sys/devices/system/cpu/cpu0/cpufreq/${1}`

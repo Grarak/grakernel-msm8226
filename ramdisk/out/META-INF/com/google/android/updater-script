@@ -1,0 +1,11 @@
+ui_print("  _____           _  __                    _ ");
+ui_print(" / ____|         | |/ /                   | |");
+ui_print("| |  __ _ __ __ _| ' / ___ _ __ _ __   ___| |");
+ui_print("| | |_ | '__/ _` |  < / _ \ '__| '_ \ / _ \ |");
+ui_print("| |__| | | | (_| | . \  __/ |  | | | |  __/ |");
+ui_print(" \_____|_|  \__,_|_|\_\___|_|  |_| |_|\___|_|");
+ui_print("");
+ui_print("Install Kernel");
+package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
+ui_print("");
+ui_print("Done");

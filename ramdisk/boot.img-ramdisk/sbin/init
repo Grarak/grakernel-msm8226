@@ -1,0 +1,44 @@
+#!/sbin/busybox sh
+
+cd /sbin
+
+for i in $(./busybox --list)
+do
+	./busybox ln -s busybox $i
+done
+
+cd /
+
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+
+mkdir -p /dev/block
+
+mknod /dev/block/mmcblk0p43 b 259 27
+
+mount -t ext4 /dev/block/mmcblk0p43 /system
+
+out() {
+	umount -f /system
+
+	chmod 755 /init
+	chmod 644 /*.qcom
+	chmod 644 /*.rc
+	chmod 644 /*.prop
+	chmod -R 755 /lib
+
+	exec /init
+}
+
+mv -f /res/sense44/* /
+
+rm -rf /system/lib/modules/*
+ln -s /lib/modules/* /system/lib/modules/
+
+mv -f /res/prima/* /system/etc/firmware/wlan/prima
+
+insmod /res/wp_mod.ko
+
+[ -f /system/app/Synapse.apk ] || mv -f /res/Synapse.apk /system/app
+
+out

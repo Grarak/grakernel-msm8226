@@ -1,0 +1,7 @@
+*~
+kernel.zip
+ramdisk.gz
+boot.img
+.DS_Store
+zImage
+dt.img

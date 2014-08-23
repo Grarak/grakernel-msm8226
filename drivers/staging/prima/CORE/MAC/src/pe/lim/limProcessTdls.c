@@ -28,10 +28,9 @@
 
   Are listed for each API below.
 
-  Copyright (c) 2010 Qualcomm Technologies, Inc.
+  Copyright (c) 2010 Qualcomm Technologies, Inc. 
   All Rights Reserved.
   Qualcomm Technologies Confidential and Proprietary
-
 ===========================================================================*/
 
 /*===========================================================================

@@ -124,9 +124,6 @@ int wlan_hdd_ftm_start(hdd_context_t *pAdapter);
 #include "wlan_hdd_tdls.h"
 #endif
 #include "wlan_hdd_debugfs.h"
-#ifdef CONFIG_HTC_WIFI_NVS
-#include <mach/htc_wifi_nvs.h>
-#endif
 
 #ifdef MODULE
 #define WLAN_MODULE_NAME  module_name(THIS_MODULE)
@@ -221,7 +218,6 @@ static int hdd_netdev_notifier_call(struct notifier_block * nb,
    hdd_context_t *pHddCtx;
 #ifdef WLAN_BTAMP_FEATURE
    VOS_STATUS status;
-   hdd_context_t *pHddCtx;
 #endif
 
    //Make sure that this callback corresponds to our device.
@@ -5091,27 +5087,6 @@ free_hdd_ctx:
   --------------------------------------------------------------------------*/
 static VOS_STATUS hdd_update_config_from_nv(hdd_context_t* pHddCtx)
 {
-#ifdef CONFIG_HTC_WIFI_NVS
-   int len;
-   char buf[30];
-   v_U8_t macAddr[VOS_MAC_ADDR_SIZE];
-
-   len = htc_get_wifi_calibration(buf, 30);
-   sscanf(buf, "macaddr=%02x:%02x:%02x:%02x:%02x:%02x",
-          (unsigned *) &macAddr[0],
-          (unsigned *) &macAddr[1],
-          (unsigned *) &macAddr[2],
-          (unsigned *) &macAddr[3],
-          (unsigned *) &macAddr[4],
-          (unsigned *) &macAddr[5]);
-
-   // only sets the first persona
-   vos_mem_copy((v_U8_t *)&pHddCtx->cfg_ini->intfMacAddr[0].bytes[0],
-                macAddr,
-                VOS_MAC_ADDR_SIZE);
-
-   return VOS_STATUS_SUCCESS;
-#else
    v_BOOL_t itemIsValid = VOS_FALSE;
    VOS_STATUS status;
    v_MACADDR_t macFromNV[VOS_MAX_CONCURRENCY_PERSONA];
@@ -5172,7 +5147,6 @@ static VOS_STATUS hdd_update_config_from_nv(hdd_context_t* pHddCtx)
 
 
    return VOS_STATUS_SUCCESS;
-#endif /* CONFIG_HTC_WIFI_NVS */
 }
 
 /**---------------------------------------------------------------------------

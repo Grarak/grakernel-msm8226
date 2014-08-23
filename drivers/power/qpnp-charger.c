@@ -256,6 +256,18 @@
 #define USB_MA_1500	(1500)
 #define USB_MA_1600	(1600)
 
+#ifdef CONFIG_BATTERY_CONTROL
+#include <linux/battery_control.h>
+
+int vac_limit = USB_MA_1500;
+int ac_limit = USB_MA_1500;
+int mhl_ac_limit = USB_MA_1500;
+int unknown_usb_limit = USB_MA_500;
+int usb_limit = USB_MA_500;
+int wireless_limit = USB_MA_1100;
+
+#endif
+
 #define VIN_MIN_4400_MV	4400
 
 #define SAFETY_TIME_MAX_LIMIT		510
@@ -3236,14 +3248,44 @@ int pm8941_set_pwrsrc_and_charger_enable(enum htc_power_source_type src,
 			mA = USB_MA_1100;
 		} else
 			mA = USB_MA_500;
+#ifdef CONFIG_BATTERY_CONTROL
+		if (wireless_limit != 0)
+			mA = wireless_limit;
+#endif
 		break;
 	case HTC_PWR_SOURCE_TYPE_DETECTING:
 	case HTC_PWR_SOURCE_TYPE_UNKNOWN_USB:
+#ifdef CONFIG_BATTERY_CONTROL
+		mA = unknown_usb_limit == 0 ? USB_MA_500 : unknown_usb_limit;
+		break;
+#endif
 	case HTC_PWR_SOURCE_TYPE_USB:
 		mA = USB_MA_500;
+#ifdef CONFIG_BATTERY_CONTROL
+		if (usb_limit != 0)
+			mA = usb_limit;
+#endif
 		break;
 	case HTC_PWR_SOURCE_TYPE_AC:
+#ifdef CONFIG_BATTERY_CONTROL
+		if (ac_limit == 0 && the_chip->is_pm8921_aicl_enabled &&
+				!(get_kernel_flag() & KERNEL_FLAG_ENABLE_FAST_CHARGE))
+			ac_limit = USB_MA_1500;
+		else
+			ac_limit = USB_MA_1100;
+		mA = ac_limit;
+		break;
+#endif
 	case HTC_PWR_SOURCE_TYPE_9VAC:
+#ifdef CONFIG_BATTERY_CONTROL
+		if (vac_limit == 0 && the_chip->is_pm8921_aicl_enabled &&
+				!(get_kernel_flag() & KERNEL_FLAG_ENABLE_FAST_CHARGE))
+			vac_limit = USB_MA_1500;
+		else
+			vac_limit = USB_MA_1100;
+		mA = vac_limit;
+		break;
+#endif
 	case HTC_PWR_SOURCE_TYPE_MHL_AC:
 		if (the_chip->is_pm8921_aicl_enabled &&
 				!(get_kernel_flag() & KERNEL_FLAG_ENABLE_FAST_CHARGE))
@@ -3251,6 +3293,10 @@ int pm8941_set_pwrsrc_and_charger_enable(enum htc_power_source_type src,
 			mA = aicl_target_ma;
 		else
 			mA = USB_MA_1100;
+#ifdef CONFIG_BATTERY_CONTROL
+		if (mhl_ac_limit != 0)
+			mA = mhl_ac_limit;
+#endif
 		break;
 	default:
 		mA = USB_MA_2;

@@ -1,0 +1,91 @@
+#!/sbin/busybox sh
+
+NUMBERS='0:"0mA", 1:"2mA", 2:"100mA", 3:"200mA", 4:"300mA", 5:"400mA", 6:"500mA", 7:"900mA", 8:"1100mA", 9:"1500mA", 10:"1600mA"'
+
+cat << CTAG
+{
+    name:Battery,
+    elements:[
+	{ SLiveLabel:{
+		refresh:500,
+		action:"live batterytemp"
+	}},
+	{ SDescription:{
+		description:"Device charging currents are composed of input current coming into the device (Nominal 5V) and charge current fed to the battery (Battery Charge Voltage). Charger detection divides charging cable types into several categories as described below. If charging current exceeds input load, then charging current is dynamically adjusted. For avoiding battery deterioration, charging currents of less than 0.7 Coloumb are advised; ex. 2600mAh (Capacity) * 0.7C = ~1820mA."
+	}},
+	{ SLiveLabel:{
+		refresh:500,
+		action:"charge-source"
+        }},
+	{ SLiveLabel:{
+                  action:"echo \"\$(expr \`cat /sys/devices/platform/htc_battery/power_supply/battery/input_current_max\` / 1000)mA\""
+        }},
+	{ STitleBar:{
+                title:"Charging Limits"
+        }},
+	{ SDescription:{
+		description:"After changing a value, re-plugin your charger to apply your modifications."
+	}},
+	{ SSeekBar:{
+		title:"9VAC",
+                default:`cat /sys/kernel/battery_control/vac`,
+                action:"generic /sys/kernel/battery_control/vac",
+		values:{
+`
+			echo $NUMBERS
+`
+		}
+        }},
+	{ SSeekBar:{
+		title:"AC",
+                default:`cat /sys/kernel/battery_control/ac`,
+                action:"generic /sys/kernel/battery_control/ac",
+		values:{
+`
+			echo $NUMBERS
+`
+		}
+        }},
+	{ SSeekBar:{
+		title:"MHL AC",
+                default:`cat /sys/kernel/battery_control/mhl_ac`,
+                action:"generic /sys/kernel/battery_control/mhl_ac",
+		values:{
+`
+			echo $NUMBERS
+`
+		}
+        }},
+	{ SSeekBar:{
+		title:"Unknown USB",
+                default:`cat /sys/kernel/battery_control/unknown_usb`,
+                action:"generic /sys/kernel/battery_control/unknown_usb",
+		values:{
+`
+			echo $NUMBERS
+`
+		}
+        }},
+	{ SSeekBar:{
+		title:"USB",
+                default:`cat /sys/kernel/battery_control/usb`,
+                action:"generic /sys/kernel/battery_control/usb",
+		values:{
+`
+			echo $NUMBERS
+`
+		}
+        }},
+	{ SSeekBar:{
+		title:"Wireless",
+                default:`cat /sys/kernel/battery_control/wireless`,
+                action:"generic /sys/kernel/battery_control/wireless",
+		values:{
+`
+			echo $NUMBERS
+`
+		}
+        }},
+    ]
+}
+CTAG

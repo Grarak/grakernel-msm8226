@@ -8,7 +8,7 @@ cat << CTAG
     elements:[
 	{ SLiveLabel:{
 		refresh:500,
-		action:"live temp"
+		action:"live cputemp"
 	}},
 	{ STitleBar:{
 		title:"CPU Frequency scaling"

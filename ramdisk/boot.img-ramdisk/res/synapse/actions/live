@@ -28,10 +28,12 @@ else
 fi
 
 case $1 in
-	temp)
-		echo CPU: $CPUTEMP Battery: $BATTERYTEMP ;;
+	cputemp)
+		echo $CPUTEMP ;;
 	cpufreq)
 		echo Core 1: $FREQONE Core 2: $FREQTWO@nCore 3: $FREQTHREE Core 4: $FREQFOUR ;;
 	gpufreq)
 		echo $GPUFREQ ;;
+	batterytemp)
+		echo $BATTERYTEMP ;;
 esac

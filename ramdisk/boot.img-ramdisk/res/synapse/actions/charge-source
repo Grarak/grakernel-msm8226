@@ -1,0 +1,15 @@
+case $((`cat /sys/devices/platform/htc_battery/power_supply/battery/charging_source`)) in
+
+0)	echo "Battery power"
+	;;
+
+1)	echo "USB Port"
+	;;
+
+2)	echo "AC charger"
+	;;
+
+*)	echo "Unknown"
+	;;
+
+esac

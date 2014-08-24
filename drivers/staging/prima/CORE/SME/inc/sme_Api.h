@@ -117,8 +117,16 @@ typedef struct _smeConfigParams
     tANI_U8       RoamRssiDiff;
 #endif
     tANI_BOOLEAN  fScanOffload;
+    tANI_U8  isAmsduSupportInAMPDU;
 } tSmeConfigParams, *tpSmeConfigParams;
 
+typedef enum
+{
+    eSME_ROAM_TRIGGER_NONE = 0,
+    eSME_ROAM_TRIGGER_SCAN = 1,
+    eSME_ROAM_TRIGGER_FAST_ROAM = 2,
+    eSME_ROAM_TRIGGER_MAX
+} tSmeFastRoamTrigger;
 
 /*------------------------------------------------------------------------- 
   Function declarations and documenation
@@ -2963,4 +2971,18 @@ eHalStatus sme_DelPeriodicTxPtrn(tHalHandle hHal, tSirDelPeriodicTxPtrn
   --------------------------------------------------------------------------*/
 void sme_enable_disable_split_scan (tHalHandle hHal, tANI_U8 nNumStaChan,
                                     tANI_U8 nNumP2PChan);
+
+/*
+ * sme API to trigger fast BSS roam to a given BSSID independent of RSSI
+ * triggers
+ * return status
+*/
+eHalStatus smeIssueFastRoamNeighborAPEvent (tHalHandle hHal,
+                                            tANI_U8 *bssid,
+                                            tSmeFastRoamTrigger fastRoamTrig);
+
+void smeGetCommandQStatus( tHalHandle hHal );
+
+eHalStatus sme_RoamDelPMKIDfromCache( tHalHandle hHal, tANI_U8 sessionId, tANI_U8 *pBSSId );
+
 #endif //#if !defined( __SME_API_H )

@@ -28,9 +28,10 @@
 
   Are listed for each API below.
 
-  Copyright (c) 2010 Qualcomm Technologies, Inc. 
+  Copyright (c) 2010 Qualcomm Technologies, Inc.
   All Rights Reserved.
   Qualcomm Technologies Confidential and Proprietary
+
 ===========================================================================*/
 
 /*===========================================================================
@@ -2521,6 +2522,7 @@ limTdlsPopulateMatchingRateSet(tpAniSirGlobal pMac,
     {
         /// Could not get rateset from CFG. Log error.
         limLog(pMac, LOGP, FL("could not retrieve rateset"));
+        val = 0;
     }
     tempRateSet.numRates = val;
 

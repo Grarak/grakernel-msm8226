@@ -47,8 +47,12 @@
   
     Implementation for the TDLS interface to PE.
   
-    Copyright (C) 2010 Qualcomm, Incorporated
-  
+   Copyright (c) 2013 Qualcomm Atheros, Inc.All Rights Reserved.
+   Qualcomm Atheros Confidential and Proprietary.
+    
+   Copyright (c) 2010 Qualcomm Technologies, Inc.All Rights Reserved.
+   Qualcomm Technologies Confidential and Proprietary
+
  
    ========================================================================== */
 

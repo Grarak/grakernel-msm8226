@@ -17,7 +17,7 @@
 #ifndef _LINUX_BATTERY_CONTROL_H
 #define _LINUX_BATTERY_CONTROL_H
 
-extern int vac_limit;
+extern int ac9v_limit;
 extern int ac_limit;
 extern int mhl_ac_limit;
 extern int unknown_usb_limit;

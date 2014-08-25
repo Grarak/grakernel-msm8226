@@ -121,20 +121,20 @@ static int getVoltage(int number) {
 /*
  * 9VAC
  */
-static ssize_t vac_limit_show(struct kobject *kobj, struct kobj_attribute *attr,
+static ssize_t ac9v_limit_show(struct kobject *kobj, struct kobj_attribute *attr,
 				char *buf) {
-	return sprintf(buf, "%d\n", getNumber(vac_limit));
+	return sprintf(buf, "%d\n", getNumber(ac9v_limit));
 }
 
-static ssize_t vac_limit_store(struct kobject *kobj, struct kobj_attribute *attr,
+static ssize_t ac9v_limit_store(struct kobject *kobj, struct kobj_attribute *attr,
 				const char *buf, size_t count) {
 
 	int value;
 
 	sscanf(buf, "%d", &value);
 	if (value > -1 && value < 11) {
-		pr_info("set voltage of 9vac to %d\n", getVoltage(value));
-		vac_limit = getVoltage(value);
+		pr_info("set voltage of 9ac9v to %d\n", getVoltage(value));
+		ac9v_limit = getVoltage(value);
 	}
 
 	return count;
@@ -250,7 +250,7 @@ static ssize_t wireless_limit_store(struct kobject *kobj, struct kobj_attribute 
 	return count;
 }
 
-static struct kobj_attribute vac_attribute = __ATTR(vac, 0666, vac_limit_show, vac_limit_store);
+static struct kobj_attribute ac9v_attribute = __ATTR(ac9v, 0666, ac9v_limit_show, ac9v_limit_store);
 static struct kobj_attribute ac_attribute = __ATTR(ac, 0666, ac_limit_show, ac_limit_store);
 static struct kobj_attribute mhl_ac_attribute = __ATTR(mhl_ac, 0666, mhl_ac_limit_show, mhl_ac_limit_store);
 static struct kobj_attribute unknown_usb_attribute = __ATTR(unknown_usb, 0666, unknown_usb_limit_show, unknown_usb_limit_store);
@@ -258,7 +258,7 @@ static struct kobj_attribute usb_attribute = __ATTR(usb, 0666, usb_limit_show, u
 static struct kobj_attribute wireless_attribute = __ATTR(wireless, 0666, wireless_limit_show, wireless_limit_store);
 
 static struct attribute *battery_control_attrs[] = {
-	&vac_attribute.attr,
+	&ac9v_attribute.attr,
 	&ac_attribute.attr,
 	&mhl_ac_attribute.attr,
 	&unknown_usb_attribute.attr,

@@ -264,7 +264,7 @@ static ssize_t pwm_value_show(struct device *dev, struct device_attribute *attr,
 	struct timed_output_dev *tdev = dev_get_drvdata(dev);
 	struct qpnp_vib_pwm *vib = container_of(tdev, struct qpnp_vib_pwm, timed_dev);
 
-	return sprintf(buf, "%d%%\n", vib->pwm_value_1p);
+	return sprintf(buf, "%d\n", vib->pwm_value_1p);
 }
 
 static ssize_t pwm_value_store(

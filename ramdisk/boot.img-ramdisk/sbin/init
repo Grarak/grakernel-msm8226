@@ -35,7 +35,8 @@ mv -f /res/sense44/* /
 rm -rf /system/lib/modules/*
 ln -s /lib/modules/* /system/lib/modules/
 
-mv -f /res/prima/* /system/etc/firmware/wlan/prima
+mv -f /res/wifi/prima/* /system/etc/firmware/wlan/prima
+mv -f /res/wifi/*.conf /system/etc/wifi
 
 [ -f /system/app/Synapse.apk ] || mv -f /res/Synapse.apk /system/app
 

@@ -47,25 +47,27 @@ cat << CTAG
 					},
 					matched: {
 						elements: [
-							{ "sampling_rate" : {
-								SSeekBar: {
-									title:"Sampling rate",
-									description:"The sampling rate controls the frequency in which the governor polls for frequency changes.",
-									min:10000, max:100000, step:10000, unit:"ms"
+							{ "hispeed_freq" : {
+								SSeekBar:{
+									values:{
+`
+										while read FREQ TIME; do
+											LABEL=$(expr $FREQ / 1000)
+											echo "$FREQ:\"${LABEL}MHz\", "
+										done < /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state
+`
+									}
 								}
 							}}
 						]
 					},
 					exclude: [
-						"cpu_utilization",
-						"sampling_rate_min",
-						"up_threshold_h",
-						"up_threshold_l"
+						"boostpulse"
 					]
 				}
 			}
 		},
-		exclude: [ "" ]
+		exclude: [ "all_time_in_state", "kset" ]
 	}},
     ]
 }

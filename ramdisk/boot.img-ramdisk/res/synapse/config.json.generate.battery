@@ -28,8 +28,8 @@ cat << CTAG
 	}},
 	{ SSeekBar:{
 		title:"9VAC",
-                default:`cat /sys/kernel/battery_control/vac`,
-                action:"generic /sys/kernel/battery_control/vac",
+                default:`cat /sys/kernel/battery_control/ac9v`,
+                action:"generic /sys/kernel/battery_control/ac9v",
 		values:{
 `
 			echo $NUMBERS

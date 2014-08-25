@@ -12,6 +12,8 @@ cat << CTAG
 		`. /res/synapse/config.json.generate.battery`,
 		`. /res/synapse/config.json.generate.io`,
 		`. /res/synapse/config.json.generate.zram`
+		`. /res/synapse/config.json.generate.vm`,
+		`. /res/synapse/config.json.generate.misc`,
     ]
 }
 CTAG

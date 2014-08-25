@@ -18,6 +18,18 @@ cat << CTAG
 			  echo "\"$IOSCHED\","
 			done
 `
+		],
+		notify:[
+			{
+				on:APPLY,
+				do:[ REFRESH, CANCEL ],
+				to:"/sys/block/mmcblk0/queue/iosched"
+			},
+			{
+				on:REFRESH,
+				do:REFRESH,
+				to:"/sys/block/mmcblk0/queue/iosched"
+			}
 		]
 	}},
 	{ SOptionList:{
@@ -45,6 +57,21 @@ cat << CTAG
 		max:2048, min:128, unit:"kB", step:128,
 		default:`cat /sys/block/mmcblk1/queue/read_ahead_kb`,
                 action:"generic /sys/block/mmcblk1/queue/read_ahead_kb"
+	}},
+	{ SDescription:{
+		description:"The various configuration items which are governor-dependent."
+	}},
+	{ STitleBar:{
+		title:"Internal storage scheduler tunables"
+        }},
+	{ STreeDescriptor:{
+		path:"/sys/block/mmcblk0/queue/iosched",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@NAME" }
+			}
+		}
 	}},
     ]
 }

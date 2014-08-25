@@ -32,8 +32,8 @@
 
 #define DTSI_PWM_CONFIG_DEFAULT   0
 #define DTSI_PWMVALUE_1P_DEFAULT 80
-#define DTSI_PWMVALUE_1P_MAX    100
-#define DTSI_PWMVALUE_1P_MIN      0
+#define DTSI_PWMVALUE_1P_MAX     99
+#define DTSI_PWMVALUE_1P_MIN     53
 
 #define DTSI_LPG_CHAN2       2
 #define DTSI_LPG_CHAN3       3

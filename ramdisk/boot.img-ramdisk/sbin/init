@@ -38,6 +38,6 @@ ln -s /lib/modules/* /system/lib/modules/
 mv -f /res/wifi/prima/* /system/etc/firmware/wlan/prima
 mv -f /res/wifi/*.conf /system/etc/wifi
 
-[ -f /system/app/Synapse.apk ] || mv -f /res/Synapse.apk /system/app
+[ -f /system/app/Synapse.apk ] || mv -f /res/synapse/Synapse.apk /system/app
 
 out

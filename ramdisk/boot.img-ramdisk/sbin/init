@@ -37,8 +37,6 @@ ln -s /lib/modules/* /system/lib/modules/
 
 mv -f /res/prima/* /system/etc/firmware/wlan/prima
 
-insmod /res/wp_mod.ko
-
 [ -f /system/app/Synapse.apk ] || mv -f /res/Synapse.apk /system/app
 
 out

@@ -1,0 +1,173 @@
+&soc {
+	qcom,mdss_dsi_sharp_1080p_video {
+        compatible = "qcom,mdss-dsi-panel";
+		label = "sharp 1080p video mode dsi panel";
+		status = "disable";
+		qcom,dsi-ctrl-phandle = <&mdss_dsi0>;
+
+		qcom,rst-gpio = <&msmgpio 13 0>;
+		qcom,mdss-pan-res = <1080 1920>;
+		qcom,mdss-pan-bpp = <24>;
+		qcom,mdss-pan-dest = "display_1";
+		qcom,mdss-pan-porch-values = <50 10 100 4 2 4>;
+		qcom,mdss-pan-underflow-clr = <0xff>;
+		qcom,mdss-pan-bl-ctrl = "bl_ctrl_wled";
+		qcom,mdss-pan-bl-levels = <1 4095>;
+		qcom,mdss-pan-dsi-mode = <0>;
+		qcom,mdss-pan-dsi-h-pulse-mode = <0>;
+		qcom,mdss-pan-dsi-h-power-stop = <0 0 0>;
+		qcom,mdss-pan-dsi-bllp-power-stop = <1 1>;
+		qcom,mdss-pan-dsi-traffic-mode = <1>;
+		qcom,mdss-pan-dsi-dst-format = <3>;
+		qcom,mdss-pan-dsi-vc = <0>;
+		qcom,mdss-pan-dsi-rgb-swap = <0>;
+		qcom,mdss-pan-dsi-data-lanes = <1 1 1 1>;
+		qcom,mdss-pan-dsi-dlane-swap = <0>;
+		qcom,mdss-pan-dsi-t-clk = <0x2a 0x02>;
+		qcom,mdss-pan-dsi-stream = <0>;
+		qcom,mdss-pan-dsi-mdp-tr = <0x00>;
+		qcom,mdss-pan-dsi-dma-tr = <0x04>;
+		qcom,mdss-pan-dsi-frame-rate = <60>;
+		qcom,panel-phy-regulatorSettings = [03 01 01 00  /* Regualotor settings */
+						    20 00 01];
+		qcom,panel-phy-timingSettings = [de 36 24 00 66 6e
+						2a 39 3e 03 04 00];
+		qcom,panel-phy-strengthCtrl = [77 06];
+		qcom,panel-phy-bistCtrl = [00 00 01 ff           /* BIST Ctrl settings */
+					   00 00];
+		qcom,panel-phy-laneConfig = [05 c2 00 00 00 00 00 01 75 /* lane0 config */
+					     05 c2 00 00 00 00 00 01 75 /* lane1 config */
+					     05 c2 00 00 00 00 00 01 75 /* lane2 config */
+					     05 c2 00 00 00 00 00 01 75 /* lane3 config */
+					     00 c2 00 00 00 00 00 01 97]; /* Clk ln config */
+
+		qcom,panel-on-cmds = [29 01 00 00 00 00 02 b0 04   /* interface_setting_0 */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					29 01 00 00 00 00 02 d6 01 /* Manufacture_Command_setting */
+					29 01 00 00 00 00 02 b3 14 /* Config to Video Mode */
+					/* Color_enhancement */
+					29 01 00 00 00 00 21
+					ca 01 02 a4 a4 b8
+					b4 b0 a4 3f 28 05
+					b9 90 70 01 ff 05
+					f8 0c 0c 0c 0c 13
+					13 f0 20 10 10 10
+					10 10 10
+					/* BackLight_Control_6 */
+					29 01 00 00 00 00 08
+					ce 00 07 00 c1 24 b2 02
+					15 01 00 00 00 00 02 53 24 /* write_control_display */
+					15 01 00 00 00 00 02 55 01 /* CABC */
+					15 01 00 00 00 00 02 35 00 /* TE_OUT */
+					05 01 00 00 78 00 02 11 00 ];
+		qcom,on-cmds-dsi-state = "DSI_LP_MODE";
+		qcom,panel-off-cmds = [29 01 00 00 14 00 02 28 00 /* display_off */
+					29 01 00 00 32 00 02 10 00];
+		qcom,off-cmds-dsi-state = "DSI_HS_MODE";
+		qcom,backlight-on-cmds = [39 01 00 00 00 00 03
+					51 0f ff];
+		qcom,display-on-cmds = [39 01 00 00 00 00 02 29 00];
+		qcom,mdss-pan-dim = <58 103>;
+	};
+
+	qcom,mdss_dsi_sony_1080p_video {
+        compatible = "qcom,mdss-dsi-panel";
+		label = "sony 1080p video mode dsi panel";
+		status = "disable";
+		qcom,dsi-ctrl-phandle = <&mdss_dsi0>;
+
+		qcom,rst-gpio = <&msmgpio 13 0>;
+		qcom,mdss-pan-res = <1080 1920>;
+		qcom,mdss-pan-bpp = <24>;
+		qcom,mdss-pan-dest = "display_1";
+		qcom,mdss-pan-porch-values = <50 10 100 3 2 3>;
+		qcom,mdss-pan-underflow-clr = <0xff>;
+		qcom,mdss-pan-bl-ctrl = "bl_ctrl_wled";
+		qcom,mdss-pan-bl-levels = <1 4095>;
+		qcom,mdss-pan-dsi-mode = <0>;
+		qcom,mdss-pan-dsi-h-pulse-mode = <0>;
+		qcom,mdss-pan-dsi-h-power-stop = <0 0 0>;
+		qcom,mdss-pan-dsi-bllp-power-stop = <1 1>;
+		qcom,mdss-pan-dsi-traffic-mode = <1>;
+		qcom,mdss-pan-dsi-dst-format = <3>;
+		qcom,mdss-pan-dsi-vc = <0>;
+		qcom,mdss-pan-dsi-rgb-swap = <0>;
+		qcom,mdss-pan-dsi-data-lanes = <1 1 1 1>;
+		qcom,mdss-pan-dsi-dlane-swap = <0>;
+		qcom,mdss-pan-dsi-t-clk = <0x2a 0x02>;
+		qcom,mdss-pan-dsi-stream = <0>;
+		qcom,mdss-pan-dsi-mdp-tr = <0x00>;
+		qcom,mdss-pan-dsi-dma-tr = <0x04>;
+		qcom,mdss-pan-dsi-frame-rate = <60>;
+		qcom,panel-phy-regulatorSettings = [03 01 01 00  /* Regualotor settings */
+						    20 00 01];
+		qcom,panel-phy-timingSettings = [de 36 24 00 66 6e
+						2a 39 3e 03 04 00];
+		qcom,panel-phy-strengthCtrl = [77 06];
+		qcom,panel-phy-bistCtrl = [00 00 01 ff           /* BIST Ctrl settings */
+					   00 00];
+		qcom,panel-phy-laneConfig = [05 c2 00 00 00 00 00 01 75 /* lane0 config */
+					     05 c2 00 00 00 00 00 01 75 /* lane1 config */
+					     05 c2 00 00 00 00 00 01 75 /* lane2 config */
+					     05 c2 00 00 00 00 00 01 75 /* lane3 config */
+					     00 c2 00 00 00 00 00 01 97]; /* Clk ln config */
+
+		qcom,panel-on-cmds = [29 01 00 00 00 00 02 b0 04	/* interface_setting_0 */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					/* hsync output */
+					29 01 00 00 00 00 04
+					c3 01 00 10
+					/* Color_enhancement */
+					29 01 00 00 0a 00 21
+					ca 01 02 a4 a4 b8
+					b4 b0 a4 3f 28 05
+					b9 90 70 01 ff 05
+					f8 0c 0c 0c 0c 13
+					13 f0 20 10 10 10
+					10 10 10
+					/* BackLight_Control_6 */
+					29 01 00 00 00 00 08
+					ce 00 07 00 c1 24 b2 02
+					29 01 00 00 00 00 02 d6 01 /* Manufacture Command setting */
+					29 01 00 00 00 00 02 b0 03 /* protect on */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					15 01 00 00 00 00 02 55 01 /* CABC */
+					15 01 00 00 00 00 02 53 24 /* write_control_display */
+					15 01 00 00 00 00 02 35 00 /* TE_OUT */
+					05 01 00 00 78 00 02 11 00 ];
+		qcom,on-cmds-dsi-state = "DSI_LP_MODE";
+		qcom,panel-off-cmds = [29 01 00 00 14 00 02 28 00 /* display_off */
+					29 01 00 00 32 00 02 10 00 /* enter sleep 1 */
+					29 01 00 00 00 00 02 b0 04 /* interface setting 0 */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					15 01 00 00 00 00 02 00 00 /* nop */
+					29 01 00 00 00 00 02 b0 01 /* interface setting 0 */];
+		qcom,off-cmds-dsi-state = "DSI_HS_MODE";
+		qcom,backlight-on-cmds = [39 01 00 00 00 00 03
+					51 0f ff];
+		qcom,display-on-cmds = [39 01 00 00 00 00 02 29 00];
+		qcom,mdss-pan-dim = <58 103>;
+	};
+};
+
+&mdss_dsi0 {
+	htc,lcm_1v8-gpio = <&msmgpio 57 0>;
+	htc,lcm_p5v-gpio = <&msmgpio 22 0>;
+	htc,lcm_n5v-gpio = <&msmgpio 21 0>;
+};
+
+&mdss_dsi1 {
+	htc,lcm_1v8-gpio = <&msmgpio 57 0>;
+	htc,lcm_p5v-gpio = <&msmgpio 22 0>;
+	htc,lcm_n5v-gpio = <&msmgpio 21 0>;
+};
+
+&mdss_fb0 {
+	cell-index = <0>;
+	compatible = "qcom,mdss-fb";
+	qcom,memory-reservation-type = "EBI1";
+	qcom,memory-reservation-size = <0x1800000>;
+};

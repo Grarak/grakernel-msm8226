@@ -622,6 +622,7 @@ void __init htc_8226_init(void)
 
 static const char *htc_8226_dt_match[] __initconst = {
 	"htc,a5ul",
+	"htc,a5dwg",
 	NULL
 };
 

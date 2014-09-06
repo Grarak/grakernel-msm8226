@@ -46,7 +46,7 @@ if [ "$kernelversion" == "y" ]; then
 fi
 ###########################################################################
 
-make a5dwg_defconfig
+make a5ul_defconfig
 echo -e "${bldcya}Build kernel ${txtrst}"
 cp arch/arm/configs/gk_a5_defconfig .config
 sed -i s/CONFIG_LOCALVERSION=\".*\"/CONFIG_LOCALVERSION=\"-GraKernel_${version}\"/ .config

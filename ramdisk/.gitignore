@@ -1,6 +1,6 @@
 *~
 kernel.zip
-ramdisk.lzo
+ramdisk.gz
 boot.img
 .DS_Store
 zImage

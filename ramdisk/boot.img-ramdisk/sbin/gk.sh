@@ -1,26 +1,13 @@
-#!/sbin/busybox sh
+#!/system/bin/sh
 
-/sbin/busybox mount -o remount,rw /system
-/sbin/busybox mount -t rootfs -o remount,rw rootfs
+mount -o remount,rw /system
+mount -t rootfs -o remount,rw rootfs
 
-cd /sbin
-
-for i in $(./busybox --list)
-do
-	./busybox ln -s busybox $i
-done
-
-cd /
-
-mv -f /res/sense44/* /
-
-rm -rf /system/lib/modules/*
+mkdir -p /system/lib/modules/backup
+mv -f /system/lib/modules/*.ko /system/lib/modules/backup
 ln -s /lib/modules/* /system/lib/modules/
 
-mv -f /res/wifi/prima/* /system/etc/firmware/wlan/prima
-mv -f /res/wifi/*.conf /system/etc/wifi
-
-[ -f /system/app/Synapse.apk ] || mv -f /res/synapse/Synapse.apk /system/app
+[ -f /system/app/Synapse.apk ] || cp -f /res/synapse/Synapse.apk /system/app
 
 ln -s /res/synapse/uci /sbin/uci
 /sbin/uci

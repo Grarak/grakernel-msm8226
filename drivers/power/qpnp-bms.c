@@ -179,6 +179,7 @@ struct qpnp_bms_chip {
 	bool				done_charging;
 	bool				last_soc_invalid;
 	
+	int				enable_sw_ocv_in_eoc;
 	int				store_batt_data_soc_thre;
 	int 				batt_stored_magic_num;
 	int 				batt_stored_soc;
@@ -395,8 +396,8 @@ static int ocv_update_stop_active_mask = OCV_UPDATE_STOP_BIT_CABLE_IN |
 											OCV_UPDATE_STOP_BIT_BOOT_UP;
 static int ocv_update_stop_reason;
 static int is_ocv_update_start = 0;
+static int is_do_sw_ocv_in_eoc = 0;
 struct mutex ocv_update_lock;
-static int batt_level = 0;
 
 static void disable_ocv_update_with_reason(bool disable, int reason);
 static int discard_backup_fcc_data(struct qpnp_bms_chip *chip);
@@ -1670,7 +1671,7 @@ static int pm8941_bms_estimate_ocv(void)
 	}
 
 	
-	if (ibatt_ua > 60000) {
+	if (ibatt_ua > 60000 && !is_do_sw_ocv_in_eoc) {
 		pr_debug("[EST]ibatt_ua=%d uA exceed 60mA, "
 			       "no_hw_ocv_ms=%lu, return!\n", ibatt_ua,
 				htc_batt_bms_timer.no_ocv_update_period_ms);
@@ -1713,6 +1714,7 @@ static int pm8941_bms_estimate_ocv(void)
 
 	
 	if (estimated_ocv_uv > 0) {
+		is_do_sw_ocv_in_eoc = 0;
 		
 		store_emmc.store_ocv_uv = the_chip->last_ocv_uv = estimated_ocv_uv;
 		the_chip->cc_backup_uah = bms_dbg.ori_cc_uah = calculate_cc(the_chip, raw.cc, CC, NORESET);
@@ -1809,7 +1811,7 @@ static int get_prop_bms_charge_counter(struct qpnp_bms_chip *chip)
 
 static int get_prop_bms_charge_counter_shadow(struct qpnp_bms_chip *chip)
 {
-	int64_t cc_raw;
+	int64_t cc_raw = 0;
 
 	mutex_lock(&chip->bms_output_lock);
 	lock_output_data(chip);
@@ -2435,7 +2437,7 @@ out:
 #endif 
 static int clamp_soc_based_on_voltage(struct qpnp_bms_chip *chip, int soc)
 {
-	int rc, vbat_uv, batt_temp;
+	int rc, vbat_uv = 0, batt_temp;
 
 	rc = get_battery_voltage(chip, &vbat_uv);
 	if (rc < 0) {
@@ -2717,7 +2719,7 @@ done_calculating:
 static int calculate_soc_from_voltage(struct qpnp_bms_chip *chip)
 {
 	int voltage_range_uv, voltage_remaining_uv, voltage_based_soc;
-	int rc, vbat_uv;
+	int rc, vbat_uv = 0;
 
 	rc = get_battery_voltage(chip, &vbat_uv);
 	if (rc < 0) {
@@ -3701,7 +3703,7 @@ int pm8941_bms_get_batt_soc(int *result)
 		return -EINVAL;
 	}
 
-	batt_level = state_of_charge = *result = recalculate_soc(the_chip);
+	state_of_charge = *result = recalculate_soc(the_chip);
 
 	if (new_boot_soc && allow_ocv_time &&
 		(currtime_ms >= allow_ocv_time)) {
@@ -4192,7 +4194,7 @@ static void disable_ocv_update_with_reason(bool disable, int reason)
 static void pm8941_btm_voltage_alarm_notify(enum qpnp_tm_state state, void *ctx)
 {
 	struct qpnp_bms_chip *chip = ctx;
-	int vbat_uv;
+	int vbat_uv = 0;
 	struct qpnp_vadc_result result;
 
 	qpnp_vadc_read(chip->vadc_dev, VBAT_SNS, &result);
@@ -4637,6 +4639,7 @@ static inline int bms_read_properties(struct qpnp_bms_chip *chip)
 	SPMI_PROP_READ(batt_stored_soc, "stored-batt-soc", rc, true);
 	SPMI_PROP_READ(batt_stored_update_time, "stored-batt-update-time", rc, true);
 	SPMI_PROP_READ(store_batt_data_soc_thre, "store-batt-data-soc-thre", rc, true);
+	SPMI_PROP_READ(enable_sw_ocv_in_eoc, "enable-sw-ocv-in-eoc", rc, true);
 	SPMI_PROP_READ(enable_batt_full_fake_ocv, "enable-batt-full-fake-ocv", rc, true);
 
 	chip->use_external_rsense = of_property_read_bool(
@@ -5037,7 +5040,6 @@ static int __devinit qpnp_bms_probe(struct spmi_device *spmi)
 	struct timespec xtime;
 	unsigned long currtime_ms;
 	struct raw_soc_params raw;
-	struct qpnp_vadc_result result;
 	struct soc_params params;
 
 	chip = devm_kzalloc(&spmi->dev, sizeof(struct qpnp_bms_chip),
@@ -5151,9 +5153,6 @@ static int __devinit qpnp_bms_probe(struct spmi_device *spmi)
 
 	load_shutdown_data(chip);
 
-	if (chip->criteria_sw_est_ocv)
-		chip->criteria_sw_est_ocv = FIRST_SW_EST_OCV_THR_MS;
-
 	if (chip->enable_fcc_learning) {
 		if (chip->battery_removed) {
 			rc = discard_backup_fcc_data(chip);
@@ -5201,13 +5200,16 @@ static int __devinit qpnp_bms_probe(struct spmi_device *spmi)
 	}
 
 	curr_soc = pm8941_bms_get_percent_charge(chip);
+	rc = pm8941_get_batt_temperature(&batt_temp);
+	if (rc)
+		pr_err("get temperature failed err = %d\n", rc);
 
 	xtime = CURRENT_TIME;
 	currtime_ms = xtime.tv_sec * MSEC_PER_SEC + xtime.tv_nsec / NSEC_PER_MSEC;
 
 	
 	if (chip->batt_stored_magic_num == BMS_STORE_MAGIC_NUM
-			&& chip->store_batt_data_soc_thre > 0
+			&& chip->store_batt_data_soc_thre > 0 && batt_temp >= 0
 			&& (curr_soc > chip->batt_stored_soc || chip->batt_stored_soc - curr_soc > 1)
 			&& (currtime_ms - chip->batt_stored_update_time) < 3600000 ) {
 
@@ -5217,18 +5219,10 @@ static int __devinit qpnp_bms_probe(struct spmi_device *spmi)
 			goto error_read;
 		}
 
-		rc = qpnp_vadc_read(chip->vadc_dev, LR_MUX1_BATT_THERM,
-			&result);
-		if (rc) {
-			pr_debug("error reading vadc LR_MUX1_BATT_THERM = %d, rc = %d\n",
-				LR_MUX1_BATT_THERM, rc);
-			return rc;
-		}
-		batt_temp = (int)result.physical;
 		read_soc_params_raw(chip, &raw, batt_temp);
 		calculate_soc_params(chip, &raw, &params, batt_temp);
 		chip->ocv_backup_uv = chip->last_ocv_uv = chip->batt_stored_ocv_uv;
-		chip->cc_backup_uah = params.cc_uah - chip->batt_stored_cc_uah;
+		chip->cc_backup_uah = bms_dbg.ori_cc_uah - chip->batt_stored_cc_uah;
 
 		new_boot_soc = pm8941_bms_get_percent_charge(chip);
 		
@@ -5288,10 +5282,10 @@ static int __devinit qpnp_bms_probe(struct spmi_device *spmi)
 
 	pr_debug("curr_soc=%d,new_boot_soc:%d,stored_soc:%d,vbatt=%d,OCV=%d,r_sense_uohm=%u,"
 			"warm_reset=%d,raw.cc:%lld,stored_cc:%d,cc_backup:%d,stored_ocv:%d,"
-			"boot_currtime_ms:%lu,allow_ocv_time:%lu,stored_time:%u\n",
+			"boot_currtime_ms:%lu,allow_ocv_time:%lu,stored_time:%u,batt_temp:%d\n",
 			curr_soc, new_boot_soc, chip->batt_stored_soc, vbatt, chip->last_ocv_uv, chip->r_sense_uohm,
 			warm_reset, raw.cc, chip->batt_stored_cc_uah, chip->cc_backup_uah, chip->batt_stored_ocv_uv,
-			currtime_ms, allow_ocv_time, chip->batt_stored_update_time);
+			currtime_ms, allow_ocv_time, chip->batt_stored_update_time, batt_temp);
 	return 0;
 
 unregister_dc:
@@ -5309,6 +5303,30 @@ error_setup:
 error_resource:
 error_read:
 	return rc;
+}
+
+int pm8941_check_soc_for_sw_ocv(void)
+{
+	int is_full_eoc = 0;
+
+	if (!the_chip) {
+		pr_warn("called before init\n");
+		return -EINVAL;
+	}
+
+	if (!the_chip->enable_sw_ocv_in_eoc)
+		return 0;
+
+	pm8941_is_batt_full_eoc_stop(&is_full_eoc);
+	if (is_full_eoc) {
+		pr_info("is_full_eoc=%d, store_soc_ui=%d, raw_soc=%d\n",
+			is_full_eoc, store_soc_ui, bms_dbg.raw_soc);
+		if (abs(store_soc_ui - bms_dbg.raw_soc) >= 5) {
+			is_do_sw_ocv_in_eoc = 1;
+			pm8941_bms_estimate_ocv();
+		}
+	}
+	return 0;
 }
 
 static int qpnp_bms_remove(struct spmi_device *spmi)
@@ -5390,8 +5408,7 @@ static void bms_complete(struct device *dev)
 	sr_time_period_ms = resume_ms - htc_batt_bms_timer.batt_suspend_ms;
 	htc_batt_bms_timer.no_ocv_update_period_ms += sr_time_period_ms;
 
-	if (htc_batt_bms_timer.no_ocv_update_period_ms > the_chip->criteria_sw_est_ocv
-		&& batt_level > DISABLE_SW_OCV_LEVEL_THRESHOLD)
+	if (htc_batt_bms_timer.no_ocv_update_period_ms > the_chip->criteria_sw_est_ocv)
 		pm8941_bms_estimate_ocv();
 }
 

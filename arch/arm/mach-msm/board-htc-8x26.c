@@ -83,20 +83,11 @@
 #include <linux/android_ediagpmem.h>
 #endif
 
-#ifdef CONFIG_KEXEC_HARDBOOT
-#include <linux/memblock.h>
-#endif
-
 #if defined(CONFIG_LCD_KCAL)
 #include <linux/module.h>
 #include "../../../drivers/video/msm/mdss/mdss_fb.h"
 #include <mach/htc_lcd_kcal.h>
 extern int update_preset_lcdc_lut(void);
-#endif
-
-#ifdef CONFIG_KEXEC_HARDBOOT
-#define HTC_8226_HARDBOOT_PHYS 0x05C00000
-#define HTC_8226_HARDBOOT_SIZE SZ_1M
 #endif
 
 #define HTC_8226_PERSISTENT_RAM_PHYS 0x05B00000
@@ -590,14 +581,7 @@ static void __init htc_8226_map_io(void)
 
 void __init htc_8226_init_early(void)
 {
-#ifdef CONFIG_KEXEC_HARDBOOT
-	// Reserve space for hardboot page
-	int ret = memblock_remove(HTC_8226_HARDBOOT_PHYS, HTC_8226_HARDBOOT_SIZE);
-	if(!ret)
-		pr_info("Hardboot page reserved at 0x%X\n", HTC_8226_HARDBOOT_PHYS);
-	else
-		pr_err("Failed to reserve space for hardboot page at 0x%X!\n", HTC_8226_HARDBOOT_PHYS);
-#endif
+        
         persistent_ram_early_init(&htc_8226_persistent_ram);
 
 #ifdef CONFIG_HTC_DEBUG_FOOTPRINT

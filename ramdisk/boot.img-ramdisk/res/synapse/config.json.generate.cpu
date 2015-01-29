@@ -1,4 +1,4 @@
-#!/system/bin/sh
+#!/system/xbin/busybox sh
 
 MPS='0:"Disabled", 1:"Enabled", 2:"Aggressive"'
 

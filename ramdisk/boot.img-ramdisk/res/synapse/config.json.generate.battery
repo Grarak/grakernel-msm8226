@@ -1,4 +1,4 @@
-#!/system/bin/sh
+#!/system/xbin/busybox sh
 
 NUMBERS='0:"0mA", 1:"2mA", 2:"100mA", 3:"200mA", 4:"300mA", 5:"400mA", 6:"500mA", 7:"900mA", 8:"1100mA", 9:"1500mA", 10:"1600mA"'
 

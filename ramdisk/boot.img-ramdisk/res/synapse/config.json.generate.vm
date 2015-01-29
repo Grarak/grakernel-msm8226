@@ -1,0 +1,49 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+    name:Virtual Machine,
+    elements:[
+	{ SGeneric:{
+   		title:"dirty ratio",
+		default:"generic /proc/sys/vm/dirty_ratio",
+   		action:"generic /proc/sys/vm/dirty_ratio"
+	}},
+	{ SGeneric:{
+   		title:"dirty background ratio",
+		default:"generic /proc/sys/vm/dirty_background_ratio",
+   		action:"generic /proc/sys/vm/dirty_background_ratio"
+	}},
+	{ SGeneric:{
+   		title:"dirty expire centisecs",
+		default:"generic /proc/sys/vm/dirty_expire_centisecs",
+   		action:"generic /proc/sys/vm/dirty_expire_centisecs"
+	}},
+	{ SGeneric:{
+   		title:"dirty writeback centisecs",
+		default:"generic /proc/sys/vm/dirty_writeback_centisecs",
+   		action:"generic /proc/sys/vm/dirty_writeback_centisecs"
+	}},
+	{ SGeneric:{
+   		title:"min free kbytes",
+		default:"generic /proc/sys/vm/min_free_kbytes",
+   		action:"generic /proc/sys/vm/min_free_kbytes"
+	}},
+	{ SGeneric:{
+   		title:"overcommit ratio",
+		default:"generic /proc/sys/vm/overcommit_ratio",
+   		action:"generic /proc/sys/vm/overcommit_ratio"
+	}},
+	{ SGeneric:{
+   		title:"swappiness",
+		default:"generic /proc/sys/vm/swappiness",
+   		action:"generic /proc/sys/vm/swappiness"
+	}},
+	{ SGeneric:{
+   		title:"vfs cache pressure",
+		default:"generic /proc/sys/vm/vfs_cache_pressure",
+   		action:"generic /proc/sys/vm/vfs_cache_pressure"
+	}},
+    ]
+}
+CTAG

@@ -303,9 +303,6 @@ EXPORT_SYMBOL(sysctl_tcp_use_userconfig);
 atomic_long_t tcp_memory_allocated;	
 EXPORT_SYMBOL(tcp_memory_allocated);
 
-int sysctl_tcp_use_userconfig __read_mostly;
-EXPORT_SYMBOL(sysctl_tcp_use_userconfig);
-
 struct percpu_counter tcp_sockets_allocated;
 EXPORT_SYMBOL(tcp_sockets_allocated);
 

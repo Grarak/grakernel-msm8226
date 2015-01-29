@@ -1,0 +1,12 @@
+if [[ ! -z $2 ]]; then
+	if [ "$1" == "/sys/kernel/sound_control_3/gpl_headphone_gain" ] || [ "$1" == "/sys/kernel/sound_control_3/gpl_headphone_pa_gain" ] || [ "$1" == "/sys/kernel/sound_control_3/gpl_speaker_gain" ]; then
+		echo $2 $2 > $1
+	else
+		echo $2 > $1
+	fi
+fi
+
+for VALUE in `cat $1`; do
+	GAIN=$VALUE
+done
+echo $GAIN

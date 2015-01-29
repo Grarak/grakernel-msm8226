@@ -1,0 +1,21 @@
+#!/system/bin/sh
+
+cat << CTAG
+
+{
+    sections: [
+		`. /res/synapse/config.json.generate.about`,
+		`. /res/synapse/config.json.generate.cpu`,
+		`. /res/synapse/config.json.generate.governor`,
+		`. /res/synapse/config.json.generate.gpu`,
+		`. /res/synapse/config.json.generate.panel`,
+		`. /res/synapse/config.json.generate.audio`,
+		`. /res/synapse/config.json.generate.battery`,
+		`. /res/synapse/config.json.generate.io`,
+		`. /res/synapse/config.json.generate.zram`
+		`. /res/synapse/config.json.generate.vm`,
+		`. /res/synapse/config.json.generate.misc`,
+    ]
+}
+CTAG
+

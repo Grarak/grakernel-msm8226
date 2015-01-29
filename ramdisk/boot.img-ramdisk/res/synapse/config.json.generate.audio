@@ -1,0 +1,43 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+    name:Audio,
+    elements:[
+	{ STitleBar:{
+		title:"Digital Gain Controls"
+	}},
+	{ SSeekBar:{
+		title:"Headphone Gain: (Left and Right)",
+                min:250, max:300,
+                action:"sound /sys/kernel/sound_control_3/gpl_headphone_gain"
+        }},
+	{ STitleBar:{
+		title:"Link Headphones Gain Controls"
+	}},
+	{ SSeekBar:{
+		title:"Handset Microphone Gain:",
+                min:-20, max:10,
+                action:"sound /sys/kernel/sound_control_3/gpl_mic_gain"
+        }},
+	{ SSeekBar:{
+		title:"Camcorder Microphone Gain:",
+                min:-20, max:10,
+                action:"sound /sys/kernel/sound_control_3/gpl_cam_mic_gain"
+        }},
+	{ SSeekBar:{
+		title:"Speaker Gain:",
+                min:150, max:200,
+                action:"sound /sys/kernel/sound_control_3/gpl_speaker_gain"
+        }},
+	{ STitleBar:{
+		title:"Analog Gain Controls"
+	}},
+	{ SSeekBar:{
+		title:"Headphone PowerAmp Gain: (Left and Right)",
+                min:32, max:45,
+                action:"sound /sys/kernel/sound_control_3/gpl_headphone_pa_gain"
+        }},
+    ]
+}
+CTAG

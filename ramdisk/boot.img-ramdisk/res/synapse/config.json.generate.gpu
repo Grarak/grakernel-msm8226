@@ -1,0 +1,46 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+    name:GPU,
+    elements:[
+	{ STitleBar:{
+		title:"GPU Frequency scaling"
+	}},
+	{ SLiveLabel:{
+		title:"GPU Frequency",
+		refresh:500,
+		action:"live gpufreq"
+	}},
+	{ SSeekBar:{
+       		title:"GPU Max Frequency",
+                unit:"MHz", weight:0.000001,
+		description:"Set the maximum freqency the GPU scales up to",
+		default:`cat /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk`,
+		action:"generic /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/max_gpuclk",
+		values:[
+`
+		for FREQ in \`cat /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/gpu_available_frequencies\`; do
+    			echo \`expr $FREQ\`,
+		done
+`
+		]
+	}},
+	{ STitleBar:{
+		title:"GPU Governor"
+	}},
+	{ SOptionList:{
+		description:"The GPU governor determines how the GPU behaves in response to changes in workload. Changing the governor will impact how the GPU scales through the frequency steps available to you GPU.",
+                default:`cat /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor`,
+                action:"generic /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor",
+                values:[
+`
+                        for GOVERNOR in \`cat /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/available_governors\` ; do
+                                echo "\"$GOVERNOR\","
+                        done
+`
+                ],
+        }},
+    ]
+}
+CTAG

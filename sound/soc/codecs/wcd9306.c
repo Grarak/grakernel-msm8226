@@ -3334,6 +3334,8 @@ static int tapan_volatile(struct snd_soc_codec *ssc, unsigned int reg)
 }
 
 #define TAPAN_FORMATS (SNDRV_PCM_FMTBIT_S16_LE)
+#define TAPAN_FORMATS_S16_S24_LE (SNDRV_PCM_FMTBIT_S16_LE | \
+				  SNDRV_PCM_FORMAT_S24_LE)
 
 #ifdef CONFIG_SOUND_CONTROL_HAX_3_GPL
 extern int snd_hax_reg_access(unsigned int);

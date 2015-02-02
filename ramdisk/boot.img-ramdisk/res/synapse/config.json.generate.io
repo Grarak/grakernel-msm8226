@@ -1,4 +1,4 @@
-#!/system/xbin/busybox sh
+#!/sbin/busybox sh
 
 cat << CTAG
 {
@@ -10,7 +10,6 @@ cat << CTAG
 	{ SOptionList:{
 		description:"Set the active I/O elevator algorithm. The scheduler decides how to handle I/O requests and how to handle them.",
 		title:"Internal storage scheduler",
-		default:`echo $(/res/synapse/actions/bracket-option /sys/block/mmcblk0/queue/scheduler)`,
 		action:"bracket-option /sys/block/mmcblk0/queue/scheduler",
 		values:[
 `
@@ -34,7 +33,6 @@ cat << CTAG
 	}},
 	{ SOptionList:{
 		title:"SD card scheduler",
-		default:`echo $(/res/synapse/actions/bracket-option /sys/block/mmcblk1/queue/scheduler)`,
 		action:"bracket-option /sys/block/mmcblk1/queue/scheduler",
 		values:[
 `

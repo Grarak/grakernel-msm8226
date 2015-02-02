@@ -1,4 +1,4 @@
-#!/system/xbin/busybox sh
+#!/sbin/busybox sh
 
 CONFIG_JSON=/res/synapse/config.json
 ACTION_SCRIPTS=/res/synapse/actions/

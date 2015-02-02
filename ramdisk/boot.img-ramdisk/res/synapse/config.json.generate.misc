@@ -1,4 +1,4 @@
-#!/system/xbin/busybox sh
+#!/sbin/busybox sh
 
 cat << CTAG
 {
@@ -32,7 +32,7 @@ cat << CTAG
         }},
 	{ SButton:{
 		label:"Test vibration",
-                action:"echo 300 > /sys/class/timed_output/vibrator/enable",
+                action:"echo 300 > /sys/class/timed_output/vibrator/enable; echo Done",
         }},
     ]
 }

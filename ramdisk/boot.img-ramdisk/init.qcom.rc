@@ -120,6 +120,7 @@ on fs
     mkdir /vendor/firmware 0771 system system
 
     mount_all /fstab.qcom
+    swapon_all /fstab.qcom
 
     setprop ro.crypto.fuse_sdcard true
 
@@ -313,9 +314,6 @@ on boot
 # load ADSP
     write /sys/kernel/boot_adsp/boot 1
 
-# Activate ZRAM
-    swapon_all fstab.qcom
-
 ## Service start here
 service adsprpcd /system/bin/adsprpcd
     class main
@@ -395,11 +393,11 @@ service ftp_del /system/bin/sdptool del 0x1ff20
 service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
     class late_start
 
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/sdcard1 /storage/sdcard1
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 /mnt/media_rw/sdcard1 /storage/sdcard1
     class late_start
     disabled
 
-service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/usbdisk /storage/usbdisk
+service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -w 1023 /mnt/media_rw/usbdisk /storage/usbdisk
     class late_start
     disabled
 # End FUSE
@@ -633,6 +631,12 @@ on property:service.bootanim.exit=1
     write /sys/module/cpu_boost/parameters/sync_threshold "1728000"
     write /sys/module/cpu_boost/parameters/input_boost_freq "1497600"
     write /sys/module/cpu_boost/parameters/input_boost_ms "40"
+
+    # Set up KSM
+    write /sys/kernel/mm/ksm/deferred_timer 1
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
 
 on property:init.svc.bootanim=running
     # Switch to NOOP and performance mode while booting

@@ -25,7 +25,7 @@ cat << CTAG
 				echo 'title:"Blue"' ;;
 			esac
 			echo ', action:"kcal '${VALUE}'",
-			max:255, min:60 }},'
+			max:256, min:30 }},'
 	done
 `
     ]
